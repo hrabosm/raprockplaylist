@@ -2,6 +2,7 @@
     ViewData["Title"] = "Home Page";
 }
 <div class="wrapper-main">
+    <h1 style="display: none;"> Rock / RapRock / NuMetal Playlist</h1>
     <img class="display-4" src="../Images/RapRockLogo.svg">
 </div>
 <div class="container">
@@ -14,7 +15,7 @@
     </script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <h1>Song request form:</h1>
-        <p>So you like my playlist and want me to add your song? Just fill up the short form down bellow and your song request will be added to my queue for listening!</p>
+        <p>So you like <a href="https://open.spotify.com/playlist/0UiwdHVdGFCoD5BzOQuU9p?si=SOeHst05T9yvMdZEk0D54Q">my playlist</a> and want me to add your song? Just fill up the short form down bellow and your song request will be added to my queue for listening!</p>
         <form action="/Form/RequestForm" method="post" id="songRequest">
             <div class="songRequestForm">
                 <div class="formLeft formArea">
@@ -287,7 +288,7 @@
             </div>
             <br>
             <p hidden id="inputWarning">Please fill in all fields</p>
-            <button class="g-recaptcha btn-submitRequest" data-sitekey="6LcJ7MUUAAAAAPz9QZPLl4VRIZ3gsmjq-znpYjW1" data-callback='onSubmit'>Submit Request</button>
+            <button class="g-recaptcha btn-main" data-sitekey="6LcJ7MUUAAAAAPz9QZPLl4VRIZ3gsmjq-znpYjW1" data-callback='onSubmit'>Submit Request</button>
         </form>
     </div>
 </div>

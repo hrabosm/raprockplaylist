@@ -1,10 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using RaprockPlaylist.Context;
 using RaprockPlaylist.Models;
-using Microsoft.EntityFrameworkCore;
-using Pomelo.EntityFrameworkCore.MySql;
 using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore.Internal;

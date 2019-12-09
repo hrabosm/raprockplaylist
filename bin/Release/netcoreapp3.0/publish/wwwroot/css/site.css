@@ -17,7 +17,7 @@ a {
   to{background-color: black; color: white;}
 }
 
-.btn-submitRequest {
+.btn-main {
   color:black;
   background-color: white;
   border-color: black;
@@ -33,7 +33,7 @@ a {
 	transition: all 0.5s;
 }
 
-.btn-submitRequest:hover {
+.btn-main:hover {
   color:white;
   background-color: black;
   padding: 12px 45px;
@@ -173,7 +173,7 @@ textarea {
   padding-bottom: 100px;
   padding-top: 100px;;
 }
-.btn-submitRequest:disabled {
+.btn-main:disabled {
   color: gray;
   background-color: darkgray;
 }
