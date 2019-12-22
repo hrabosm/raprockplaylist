@@ -1,6 +1,9 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+.captcha {
+  display: inline-block;
+}
 a.navbar-brand {
   white-space: normal;
   text-align: center;
@@ -65,7 +68,7 @@ html {
   input.text {
     width: 250px;
   }
-  #songRequest {
+  #songRequestForm {
     display: inline-block;
   }
   .formLeft {
@@ -108,7 +111,7 @@ html {
   textarea {
     width: 100%;
   }
-  #songRequest {
+  #songRequestForm {
     display: block;
   }
   .formLeft {
@@ -156,7 +159,7 @@ label {
 }
 #songRequest {
   overflow: hidden;
-  display: inline-block;
+  display: block;
 }
 .formRight {
   float: left;

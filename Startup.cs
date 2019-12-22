@@ -29,8 +29,13 @@ namespace RaprockPlaylist
         {
             services.AddControllersWithViews();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSession();
             services.AddDbContext<PlaylistContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddHttpClient("gCaptcha", c =>
+            {
+                c.BaseAddress = new Uri("https://www.google.com/recaptcha/api/siteverify");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,6 +61,7 @@ namespace RaprockPlaylist
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {

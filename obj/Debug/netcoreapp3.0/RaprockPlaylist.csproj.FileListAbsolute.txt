@@ -74,3 +74,4 @@
 /Users/hrabosm/Desktop/RaprockPlaylist/bin/Debug/netcoreapp3.0/System.ComponentModel.Annotations.dll
 /Users/hrabosm/Desktop/RaprockPlaylist/bin/Debug/netcoreapp3.0/System.Diagnostics.DiagnosticSource.dll
 /Users/hrabosm/Desktop/RaprockPlaylist/bin/Debug/netcoreapp3.0/System.Runtime.CompilerServices.Unsafe.dll
+/Users/hrabosm/Desktop/RaprockPlaylist/bin/Debug/netcoreapp3.0/RestSharp.dll

@@ -4,19 +4,54 @@
 <div class="wrapper-main">
     <h1 style="display: none;"> Rock / RapRock / NuMetal Playlist</h1>
     <img class="display-4" src="../Images/RapRockLogo.svg">
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+        async defer>
+    </script>
+    <script type="text/javascript">
+        var warning = document.getElementById("inputWarning");
+        var captcha;
+        var responseField;
+        var onloadCallback = function() {
+            captcha = grecaptcha.render('g-captcha', {
+                'sitekey' : '6LdB_8gUAAAAAJ_SiEHLFNTr9n2RN2_bvWXocutf',
+                'callback' : verifyCallback,
+                'theme' : 'dark'
+            });
+        };
+        function verifyCallback() {
+            return new Promise(function(resolve, reject) { 
+
+                //Your code logic goes here
+
+                //Instead of using 'return false', use reject()
+                //Instead of using 'return' / 'return true', use resolve()
+                $.ajax({
+                    type: "POST",
+                    url: "/Form/ReCaptchaVerify",
+                    data: {
+                        captchaResponse: grecaptcha.getResponse(captcha)
+                    },
+                    success: function() {
+                        $("#btn-main").prop('disabled', false);
+                        $("#g-captcha").prop('hidden', true);
+                        resolve();
+                    },
+                    error: function() {
+                        grecaptcha.reset();
+                        $("#btn-main").prop('disabled', true);
+                        reject("Try again");
+                    }
+                });
+            });
+        };
+        $("#btn-main").prop('disabled', true);
+    </script>
 </div>
 <div class="container">
     <div class="form-input-request text-center">
-    <script>
-        function onSubmit(token) 
-        {
-            document.getElementById("songRequest").submit();
-        }
-    </script>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <h1>Song request form:</h1>
         <p>So you like <a href="https://open.spotify.com/playlist/0UiwdHVdGFCoD5BzOQuU9p?si=SOeHst05T9yvMdZEk0D54Q">my playlist</a> and want me to add your song? Just fill up the short form down bellow and your song request will be added to my queue for listening!</p>
-        <form action="/Form/RequestForm" method="post" id="songRequest">
+        <form action="/Form/RequestForm" method="post" id="songRequestForm">
             <div class="songRequestForm">
                 <div class="formLeft formArea">
                     <div class="email inputForm">
@@ -29,7 +64,7 @@
                     </div>
                     <div class="bandLocation inputForm">
                         <label for="country">Band location:</label>
-                        <select form="songRequest" id="country" name="bandLocation" required>
+                        <select form="songRequestForm" id="country" name="bandLocation" required>
                             <option value="Afganistan">Afghanistan</option>
                             <option value="Albania">Albania</option>
                             <option value="Algeria">Algeria</option>
@@ -282,13 +317,15 @@
                 <div class="formRight formArea">
                     <div class="songRequestMessage inputForm">
                         <label for="songRequest">Message:</label>
-                        <textarea id="songRequest" rows="4" cols="50" form="songRequest" name="songRequest" required></textarea>
+                        <textarea id="songRequest" rows="4" cols="50" form="songRequestForm" name="songRequest" required></textarea>
                     </div>
+                   
                 </div>
             </div>
             <br>
-            <p hidden id="inputWarning">Please fill in all fields</p>
-            <button class="g-recaptcha btn-main" data-sitekey="6LcJ7MUUAAAAAPz9QZPLl4VRIZ3gsmjq-znpYjW1" data-callback='onSubmit'>Submit Request</button>
-        </form>
+            <div class="captcha" id="g-captcha"></div> <br>
+            <p hidden id="inputWarning">Please verify that you are not a robot!</p>
+            <input class="btn-main" id="btn-main" type="submit" value="Submit Request" disabled="disabled">
+            </form>
     </div>
 </div>
