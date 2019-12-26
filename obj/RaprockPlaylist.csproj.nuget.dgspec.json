@@ -63,6 +63,10 @@
             "Svg.Core": {
               "target": "Package",
               "version": "[3.0.49.2, )"
+            },
+            "WebEssentials.AspNetCore.PWA": {
+              "target": "Package",
+              "version": "[1.0.59, )"
             }
           },
           "imports": [
