@@ -34,15 +34,24 @@
 .btn-back:hover > svg{
     fill: white;
 }
-.privacy {
+.privacy p {
     text-align: justify;
-    padding: 50px 75px 100px 75px;
+}
+@media only screen and (min-width: 768px) {
+    .privacy {
+        padding: 50px 75px 100px 75px;
+    }
+}
+@media only screen and (max-width: 768px) {
+    .privacy {
+        padding: 50px 15px 100px 15px;
+    }
 }
 .arrow {
     margin: 0 10px 0 10px;
 }
 .header {
-    display: inline-block;
+    display: block;
 }
 .back-text {
     left: 2px;

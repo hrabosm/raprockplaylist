@@ -75,3 +75,17 @@
 /Users/hrabosm/Desktop/RaprockPlaylist/bin/Debug/netcoreapp3.0/System.Diagnostics.DiagnosticSource.dll
 /Users/hrabosm/Desktop/RaprockPlaylist/bin/Debug/netcoreapp3.0/System.Runtime.CompilerServices.Unsafe.dll
 /Users/hrabosm/Desktop/RaprockPlaylist/bin/Debug/netcoreapp3.0/RestSharp.dll
+/Users/hrabosm/Desktop/RaprockPlaylist/bin/Debug/netcoreapp3.0/Microsoft.AspNetCore.JsonPatch.dll
+/Users/hrabosm/Desktop/RaprockPlaylist/bin/Debug/netcoreapp3.0/Microsoft.AspNetCore.Mvc.Razor.Extensions.dll
+/Users/hrabosm/Desktop/RaprockPlaylist/bin/Debug/netcoreapp3.0/Microsoft.AspNetCore.Razor.Language.dll
+/Users/hrabosm/Desktop/RaprockPlaylist/bin/Debug/netcoreapp3.0/Microsoft.CodeAnalysis.dll
+/Users/hrabosm/Desktop/RaprockPlaylist/bin/Debug/netcoreapp3.0/Microsoft.CodeAnalysis.CSharp.dll
+/Users/hrabosm/Desktop/RaprockPlaylist/bin/Debug/netcoreapp3.0/Microsoft.CodeAnalysis.Razor.dll
+/Users/hrabosm/Desktop/RaprockPlaylist/bin/Debug/netcoreapp3.0/Microsoft.DotNet.PlatformAbstractions.dll
+/Users/hrabosm/Desktop/RaprockPlaylist/bin/Debug/netcoreapp3.0/Microsoft.Extensions.DependencyModel.dll
+/Users/hrabosm/Desktop/RaprockPlaylist/bin/Debug/netcoreapp3.0/Newtonsoft.Json.Bson.dll
+/Users/hrabosm/Desktop/RaprockPlaylist/bin/Debug/netcoreapp3.0/NWebsec.AspNetCore.Core.dll
+/Users/hrabosm/Desktop/RaprockPlaylist/bin/Debug/netcoreapp3.0/NWebsec.AspNetCore.Mvc.dll
+/Users/hrabosm/Desktop/RaprockPlaylist/bin/Debug/netcoreapp3.0/NWebsec.AspNetCore.Mvc.TagHelpers.dll
+/Users/hrabosm/Desktop/RaprockPlaylist/bin/Debug/netcoreapp3.0/WebEssentials.AspNetCore.Pwa.dll
+/Users/hrabosm/Desktop/RaprockPlaylist/obj/Debug/netcoreapp3.0/RaprockPlaylist.MvcApplicationPartsAssemblyInfo.cs

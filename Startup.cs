@@ -12,6 +12,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore; 
 using RaprockPlaylist.Context;
+using Microsoft.AspNetCore.Rewrite;
+using RaprockPlaylist.Functions;
 
 namespace RaprockPlaylist
 {
@@ -41,6 +43,9 @@ namespace RaprockPlaylist
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var options = new RewriteOptions();
+            options.Rules.Add(new Functions.NonWwwRule());
+            app.UseRewriter(options);
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -55,6 +60,9 @@ namespace RaprockPlaylist
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
+
+            app.UseStatusCodePagesWithReExecute("/error/{0}");
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

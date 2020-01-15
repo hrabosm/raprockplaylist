@@ -1,14 +1,18 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using RaprockPlaylist.Context;
-using RaprockPlaylist.Models;
 using System;
 using System.Web;
 using System.Linq;
 using Microsoft.EntityFrameworkCore.Internal;
 using RestSharp;
 using System.Collections.Generic;
+
+//raprock dependencies
+using RaprockPlaylist.Context;
+using RaprockPlaylist.Models;
 using RaprockPlaylist.Factories;
+using RaprockPlaylist.Functions;
+using System.Text;
 
 namespace RaprockPlaylist.Controllers
 {
@@ -20,6 +24,8 @@ namespace RaprockPlaylist.Controllers
         private readonly IHttpContextAccessor _accessor;
         private readonly PlaylistContext _context;
         private Log log;
+        StringBuilder stringBuilder = new StringBuilder();
+                
 
         public FormController(IHttpContextAccessor accessor,PlaylistContext context)
         {
@@ -28,43 +34,48 @@ namespace RaprockPlaylist.Controllers
         }
         public IActionResult RequestForm(string songRequest,string email, string bandName, string bandLocation)
         {
+            
+            //validify all input
+            if(HttpContext.Session.GetString("captcha") != "verified" || String.IsNullOrEmpty(HttpContext.Session.GetString("captcha")))
+                return BadRequest("Please verify that you are human");
+            if(!Functions.Validify.IsValidEmail(email))
+                return BadRequest("Invalid email");
+            if(String.IsNullOrEmpty(songRequest) || String.IsNullOrEmpty(bandName) || String.IsNullOrEmpty(bandLocation))
+                return BadRequest("Please fill up all form fields");
+
             using(_context)
             {
-                if(HttpContext.Session.GetString("captcha") != "verified" || String.IsNullOrEmpty(HttpContext.Session.GetString("captcha")))
-                    return BadRequest();
-
                 _context.Database.EnsureCreated();
-                Visitor visitor = _context.Visitor.Where(v => v.IpAdress == _accessor.HttpContext.Connection.RemoteIpAddress.ToString()).FirstOr(new Visitor());
-                if(String.IsNullOrEmpty(visitor.IpAdress))
-                {
-                    visitor.GetIpAdress(_accessor);
-                    _context.Visitor.Add(visitor);
-                }
+
+                //Log
                 log = new Log();
-                log.IdVisitorNavigation = visitor;
-                log.Source = "Index";
-                log.Message = "Sending form";
+                Visitor visitor = log.Initialize(_context,_accessor);
+                log.LogContent("Index", "Sending form");
                 _context.Log.Add(log);
-                
-                Band band = _context.Band.Where(v => v.BandName == bandName).FirstOr(new Band());
+
+                //Check if band exists if not, create one
+                Band band = _context.Band.Where(v => v.BandName == bandName).FirstOrDefault() ?? new Band();
                 if(String.IsNullOrEmpty(band.BandName))
                 {
+                    band = new Band();
                     band.BandName = bandName;
                     band.BandLocation = bandLocation;
                     _context.Band.Add(band);
                 }
 
-                var newSongRequest = new SongRequest{
+                //Create new song request
+                SongRequest newSongRequest = new SongRequest{
                     SongRequest1 = songRequest,
                     IdVisitorNavigation = visitor,
                     Email = email
                 };
+
                 _context.SongRequest.Add(newSongRequest);
-                TempData.Remove("idNewRequest");
-                TempData.Add("idNewRequest",newSongRequest.IdSongRequest);
+
+                Functions.Mail.SendMail("New song request",stringBuilder.Append("Band: ").Append(bandName).Append(" - From: ").Append(bandLocation).Append("<br>Message:<br>").Append(songRequest).ToString(),email);
                 _context.SaveChanges();
             }
-            return RedirectToAction("Success","Home");
+            return Ok("Thank you!");
         }
         public StatusCodeResult ReCaptchaVerify(string captchaResponse)
         {
@@ -72,35 +83,36 @@ namespace RaprockPlaylist.Controllers
             using(_context)
             {
                 _context.Database.EnsureCreated();
-                
-                Visitor visitor = _context.Visitor.Where(v => v.IpAdress == _accessor.HttpContext.Connection.RemoteIpAddress.ToString()).FirstOr(new Visitor());
-                if(String.IsNullOrEmpty(visitor.IpAdress))
-                {
-                    visitor.GetIpAdress(_accessor);
-                    _context.Visitor.Add(visitor);
-                }
+
+                //log
                 log = new Log();
-                log.Source = "g-recaptchaSend";
-                log.IdVisitorNavigation = visitor;
-                log.Message = "Sending captcha for verification";
-                _context.Log.Add(log);
-                _context.SaveChanges();
-                RequestFactory RC = new RequestFactory();
-                RestRequest restRequest = RC.RequestConstructor(new Dictionary<string,string>()
-                                            {
-                                                {"secret",secretKey},
-                                                {"response", captchaResponse},
-                                                {"remoteip", _accessor.HttpContext.Connection.RemoteIpAddress.ToString()}
-                                            },Method.POST);
-                reCaptcha = RC.RequestSender(url,restRequest);
-                log = new Log();
-                log.Source = "g-recaptchaResponse";
-                log.IdVisitorNavigation = visitor;
-                log.Message = "Recieving captcha response";
+                Visitor visitor = log.Initialize(_context,_accessor);
+                log.LogContent("g-recaptchaSend", "Sending captcha for verification");
                 _context.Log.Add(log);
                 _context.SaveChanges();
 
+                //reCaptcha verify
+                RequestFactory RC = new RequestFactory();
+                RestRequest restRequest = RC.RequestConstructor(
+                    new Dictionary<string,string>()
+                        {
+                            {"secret",secretKey},
+                            {"response", captchaResponse},
+                            {"remoteip", _accessor.HttpContext.Connection.RemoteIpAddress.ToString()}
+                        },
+                        Method.POST);
+                reCaptcha = RC.RequestSender(url,restRequest);
+
+                //log
+                log = new Log();
+                log.Initialize(_context,_accessor);
+                log.LogContent("g-recaptchaResponse", "Receiving captcha response");
+                _context.Log.Add(log);
+                
+                _context.SaveChanges();
             }
+
+            //Check if captcha was successful or not
             //if(reCaptcha.Content.Contains('"'+"success"+'"'+": true"))
             if(reCaptcha.Content.Contains("true"))
             {

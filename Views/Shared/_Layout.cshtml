@@ -2,12 +2,15 @@
 <html lang="en">
 <head>
     <meta name="google-site-verification" content="uJC5QIwn1mTY9PEwnuxpQd0ESZFD1I7kAFKSbKpN4MQ" />
+    <meta name="description" content="Want your band or your favorite song featured in our playlist? Submit your request, we'll review it and add it to our playlist! We have thousands of followers, so get your style heard.">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - RaprockPlaylist</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/footer.css" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="apple-touch-icon" sizes="180x180" href="~/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="~/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="~/favicon-16x16.png">
@@ -15,6 +18,16 @@
     <link rel="mask-icon" href="~/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#2b5797">
     <meta name="theme-color" content="#ffffff">
+
+    <!-- OPG -->
+    <meta name="keywords" content="Rap, Rock, Playlist, Submitting, Song, Request, Spotify, Followers, Gain More Followers, NuMetal, Metal, RapRock"/>
+    <meta property="og:title" content="Raprock Playlist" />
+    <meta property="og:image" content="https://raprockplaylist.tk/safari-pinned-tab.svg"/>
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://raprockplaylist.tk" />
+    <meta property="og:site_name" content="RaprockPlaylist" />
+    <meta property="og:description" content="Want your band or your favorite song featured in our playlist? Submit your request, we'll review it and add it to our playlist! We have thousands of followers, so get your style heard." />
+
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154892407-1"></script>
     <script type="text/javascript">
@@ -24,6 +37,7 @@
 
         gtag('config', 'UA-154892407-1');
     </script>
+    @RenderSection("ScriptsHeader", required: false)
 </head>
 <body>
     <div class="main-content">
@@ -31,14 +45,53 @@
             @RenderBody()
         </main>
     </div>
+    <footer data-aos="fade-up" id="footer" class="footer-1">
+        <div class="main-footer widgets-dark typo-light">
+            <div class="container">
+                <div class="row">
+                
+                    <div class="col-xs-12 col-sm-6 col-md-3">
+                        <div class="widget subscribe no-box">
+                            <h5 class="widget-title">Rock/Rap-Rock/Nu-Metal Playlist<span></span></h5>
+                            <p>Our Playlist consists of bands like Hollywood Undead, Three Days Grace, My Chemical Romance, Linkin Park, Skiller, Papa Roach and more! All your favorite music in one place! </p>
+                        </div>
+                    </div>
 
-    <footer class="border-top footer text-muted">
-            &copy; 2019 - RaprockPlaylist - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    <div class="col-xs-12 col-sm-6 col-md-3">
+                        <div class="widget no-box">
+                            <h5 class="widget-title">Contact Us<span></span></h5>
+
+                            <p><a href="mailto:info@raprockplaylist.tk" title="glorythemes">info@raprockplaylist.tk</a></p>
+                                <ul class="social-footer2">
+                                </ul>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-3">
+                        <div class="widget no-box">
+                            <h5 class="widget-title">Playlist<span></span></h5>
+                            <iframe src="https://open.spotify.com/embed/playlist/0UiwdHVdGFCoD5BzOQuU9p" width="300" height="280" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-copyright">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <p>Copyright RaprockPlaylist.tk &copy; 2020 - All rights reserved - <a href="/Home/Privacy">Privacy</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/form.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

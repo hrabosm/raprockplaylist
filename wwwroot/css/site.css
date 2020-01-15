@@ -43,10 +43,6 @@ a {
   margin: 0px 0px;
 }
 
-.songRequestForm {
-  display: inherit;
-}
-
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
   color: #fff;
   background-color: #1b6ec2;
@@ -64,15 +60,6 @@ html {
   }
   .display-4 {
     margin-top: -24%;
-  }
-  input.text {
-    width: 250px;
-  }
-  #songRequestForm {
-    display: inline-block;
-  }
-  .formLeft {
-    float: left;
   }
 }
 
@@ -105,21 +92,6 @@ html {
   .display-4 {
     padding-top: 50%;
   }
-  input.text {
-    width: 100%;
-  }
-  textarea {
-    width: 100%;
-  }
-  #songRequestForm {
-    display: block;
-  }
-  .formLeft {
-    float: none;
-  }
-  .footer {
-    text-align: center;
-  }
 }
 .wrapper-main {
   /* Margin bottom by footer height */
@@ -128,16 +100,6 @@ html {
   background-position: center top;
   background-size: auto 100%;
   box-shadow: black 0px -50px 100px;
-}
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  background-color: white;
-  line-height: 60px; /* Vertically center the text there */
-  padding-left: 50px;
-  padding-right: 50px;
 }
 input, label {
   display:block;
@@ -178,16 +140,19 @@ textarea {
 }
 .btn-main:disabled {
   color: gray;
+  border-color: gray;
   background-color: darkgray;
-}
-input[type=text], select, textarea, input[type=email] {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-  width: 100%;
 }
 #inputWarning {
   color: rgba(255, 100, 100, 1);
   font-size: smaller;
   margin-bottom: -1px;
+}
+.list-group {
+  text-align: left;
+}
+label {
+  padding-top: 4.5px;
+  padding-left: 10px;
+  margin-bottom: 7px!important;
 }

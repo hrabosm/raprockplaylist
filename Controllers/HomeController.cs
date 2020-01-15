@@ -23,21 +23,21 @@ namespace RaprockPlaylist.Controllers
             _accessor = accessor;
             _context = context;
         }
-
+        [Route("error/{code:int}")]
+        public IActionResult ErrorCode(int code)
+        {
+            Error err = new Error();
+            err.errorNumber = code;
+            ViewBag.Message = err;
+            return View("error");
+        }
         public IActionResult Index()
         {
             using(_context)
             {
-                Visitor visitor = _context.Visitor.Where(v => v.IpAdress == _accessor.HttpContext.Connection.RemoteIpAddress.ToString()).FirstOr(new Visitor());
-                if(String.IsNullOrEmpty(visitor.IpAdress))
-                {
-                    visitor.GetIpAdress(_accessor);
-                    _context.Visitor.Add(visitor);
-                }
                 log = new Log();
-                log.IdVisitorNavigation = visitor;
-                log.Source = "Index";
-                log.Message = "Loading page";
+                Visitor visitor = log.Initialize(_context,_accessor);
+                log.LogContent("Index", "Loading page");
                 _context.Log.Add(log);
                 _context.SaveChanges();
             }
@@ -48,16 +48,9 @@ namespace RaprockPlaylist.Controllers
         {
             using(_context)
             {
-                Visitor visitor = _context.Visitor.Where(v => v.IpAdress == _accessor.HttpContext.Connection.RemoteIpAddress.ToString()).FirstOr(new Visitor());
-                if(String.IsNullOrEmpty(visitor.IpAdress))
-                {
-                    visitor.GetIpAdress(_accessor);
-                    _context.Visitor.Add(visitor);
-                }
                 log = new Log();
-                log.IdVisitorNavigation = visitor;
-                log.Source = "Privacy";
-                log.Message = "Loading page";
+                Visitor visitor = log.Initialize(_context,_accessor);
+                log.LogContent("Privacy", "Loading page");
                 _context.Log.Add(log);
                 _context.SaveChanges();
             }
@@ -67,27 +60,19 @@ namespace RaprockPlaylist.Controllers
         {
             using(_context)
             {
-                Visitor visitor = _context.Visitor.Where(v => v.IpAdress == _accessor.HttpContext.Connection.RemoteIpAddress.ToString()).FirstOr(new Visitor());
-                if(String.IsNullOrEmpty(visitor.IpAdress))
-                {
-                    visitor.GetIpAdress(_accessor);
-                    _context.Visitor.Add(visitor);
-                }
                 log = new Log();
-                log.IdVisitorNavigation = visitor;
-                log.Source = "Index";
-                log.Message = "Loaded main page";
+                Visitor visitor = log.Initialize(_context,_accessor);
+                log.LogContent("Index", "Loaded main page");
                 _context.Log.Add(log);
                 _context.SaveChanges();
             }
-            TempData.Remove("idNewRequest");
             return View();
         }
-
+        /*
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        }*/
     }
 }
