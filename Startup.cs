@@ -32,7 +32,7 @@ namespace RaprockPlaylist
             services.AddControllersWithViews();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSession();
-            services.AddDbContext<PlaylistContext>(options =>
+            services.AddDbContextPool<PlaylistContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddHttpClient("gCaptcha", c =>
             {

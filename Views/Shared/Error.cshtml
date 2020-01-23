@@ -1,21 +1,17 @@
-﻿@model RaprockPlaylist.Models.Error
-@{
+﻿@{
     ViewData["Title"] = "Error";
 }
 <head>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:200,400,700" rel="stylesheet">
 
-    <link type="text/css" rel="stylesheet" href="css/error.css">
+    <link type="text/css" rel="stylesheet" href="~/css/error.css?version=1.0">
 </head>
 <body>
 <div id="notfound">
 <div class="notfound">
 <div class="notfound-404">
-<h1>Oopsie!</h1>
-@{   
-    var data = ViewBag.Message;  
-} 
-<h2>@data.errorNumber - What happened?</h2>
+<h1>Whoops!</h1>
+<h2>@ViewData["errorCode"] - Looks like we've hit a Rock</h2>
 </div>
 <a href="/">Go back to homepage!</a>
 </div>

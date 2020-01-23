@@ -2,13 +2,13 @@
     ViewData["Title"] = "Home Page";
 }
 <div class="wrapper-main">
-    <h1 style="display: none;"> Rock / Rap-Rock / Nu-Metal Playlist</h1>
-    <img class="display-4" src="../Images/RapRockLogo.svg" alt="Rock / Rap-Rock / Nu-Metal Playlist">
+    <img class="raprock-logo" src="../Images/RapRockLogo.svg?version=1.0" alt="Rock / Rap-Rock / Nu-Metal Playlist">
     @section Scripts{
     <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
         async defer>
     </script>
     <script type="text/javascript">
+        
         AOS.init();
         var warning = document.getElementById("inputWarning");
         var captcha;
@@ -58,7 +58,8 @@
             })
             .done(function(response) {
                 $("#songRequestForm").hide("fast");
-                $("#mainBody").append("<div id='thankYou' class='alert alert-success'><h1>Thank you!</h1><p>Your song request has been submitted, we'll keep you updated on state of your song request! If you have any questions don't hesitate to contact us on info@raprockplaylist.tk</p></div>");
+                $("#songRequestForm").remove();
+                $("#mainBody").append("<div data-aos='fade-up' id='thankYou' class='alert alert-success'><h1>Thank you!</h1><p>Your song request has been submitted, we'll keep you updated on state of your song request! If you have any questions don't hesitate to contact us on info@raprockplaylist.tk</p></div>");
                 $("#thankYou").show("fast");
             })
             .fail(function(data) {
@@ -79,12 +80,12 @@
         </div>
         
         <div data-aos="fade-up" class="row mb-3">
-            <div class="col-md-6">
+            <div class="col-md-6 mobile-margin">
                 <div class="row">
                     <p class="text-justify">So you like <a href="https://open.spotify.com/playlist/0UiwdHVdGFCoD5BzOQuU9p?si=SOeHst05T9yvMdZEk0D54Q">my playlist</a> and want me to add your song? Just fill up the short form down bellow and that's it! After that it's all in our hands!</p>
                 </div>
                 <div class="row">
-                    <iframe src="https://open.spotify.com/embed/playlist/0UiwdHVdGFCoD5BzOQuU9p" width="420" height="160" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                    <iframe src="https://open.spotify.com/embed/playlist/0UiwdHVdGFCoD5BzOQuU9p" width="100%" height="160" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
                 </div>
             </div>
             <div class="col-md-6">
@@ -106,7 +107,7 @@
                 </div>
             </div>
             <div class="row">
-                <div data-aos="fade-right" class="col-md-6">
+                <div data-aos="fade-up" class="col-md-6">
                     <input class="form-control mb-3 shadow-sm" id="email" type="email" name="email" placeholder="Email" required/>
                     <input class="form-control mb-3 shadow-sm" id="bandName" type="text" name="bandName" placeholder="Band name" required/>
                     <label for="country" class="font-weight-lighter">Band location:</label>
@@ -362,8 +363,8 @@
                 </div>
                 <!--</div>
                 <div class="formRight formArea">-->
-                <div data-aos="fade-left" class="col-md-6">
-                        <textarea class="form-control shadow-sm" rows="7" id="songRequest" form="songRequestForm" name="songRequest" placeholder="Message" required></textarea>
+                <div data-aos="fade-up" class="col-md-6">
+                    <textarea class="form-control shadow-sm" rows="7" id="songRequest" form="songRequestForm" name="songRequest" placeholder="Message" required></textarea>
                 </div>
             </div>
             <br>

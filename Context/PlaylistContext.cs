@@ -19,8 +19,7 @@ namespace RaprockPlaylist.Context
         public virtual DbSet<Log> Log { get; set; }
         public virtual DbSet<SongRequest> SongRequest { get; set; }
         public virtual DbSet<Visitor> Visitor { get; set; }
-        private IConfiguration Configuration {get;}
-
+        private IConfiguration Configuration { get; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Band>(entity =>
@@ -37,12 +36,14 @@ namespace RaprockPlaylist.Context
                 entity.Property(e => e.BandLocation)
                     .HasColumnName("band_Location")
                     .HasColumnType("varchar(45)")
-                    .HasCharSet(Pomelo.EntityFrameworkCore.MySql.Storage.CharSet.Utf8);
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
 
                 entity.Property(e => e.BandName)
                     .HasColumnName("band_Name")
                     .HasColumnType("varchar(45)")
-                    .HasCharSet(Pomelo.EntityFrameworkCore.MySql.Storage.CharSet.Utf8);
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
 
                 entity.Property(e => e.InPlaylist)
                     .IsRequired()
@@ -54,30 +55,20 @@ namespace RaprockPlaylist.Context
 
             modelBuilder.Entity<ErrorLog>(entity =>
             {
-                entity.HasKey(e => new { e.IdErrorLog, e.TsErrorLog })
+                entity.HasKey(e => e.IdErrorLog)
                     .HasName("PRIMARY");
 
                 entity.ToTable("errorLog");
 
-                entity.HasIndex(e => e.IdErrorLog)
-                    .HasName("id_UNIQUE")
-                    .IsUnique();
-
                 entity.HasIndex(e => e.IdVisitor)
-                    .HasName("FK_idVisitor_idx");
+                    .HasName("FK_errorLog_idVisitor_idx");
 
-                entity.HasIndex(e => new { e.TsErrorLog, e.Source })
-                    .HasName("tsErrorLog_Source_idx");
+                entity.HasIndex(e => e.TsErrorLog)
+                    .HasName("tsErrorLog_INX");
 
                 entity.Property(e => e.IdErrorLog)
                     .HasColumnName("idErrorLog")
-                    .HasColumnType("int(11)")
-                    .ValueGeneratedOnAdd();
-
-                entity.Property(e => e.TsErrorLog)
-                    .HasColumnName("tsErrorLog")
-                    .HasColumnType("timestamp")
-                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                    .HasColumnType("int(11)");
 
                 entity.Property(e => e.IdVisitor)
                     .HasColumnName("idVisitor")
@@ -85,16 +76,24 @@ namespace RaprockPlaylist.Context
 
                 entity.Property(e => e.Message)
                     .HasColumnType("varchar(255)")
-                    .HasCharSet(Pomelo.EntityFrameworkCore.MySql.Storage.CharSet.Utf8);
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
 
                 entity.Property(e => e.Source)
                     .HasColumnType("varchar(50)")
-                    .HasCharSet(Pomelo.EntityFrameworkCore.MySql.Storage.CharSet.Utf8);
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
+
+                entity.Property(e => e.TsErrorLog)
+                    .HasColumnName("tsErrorLog")
+                    .HasColumnType("timestamp")
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                 entity.HasOne(d => d.IdVisitorNavigation)
                     .WithMany(p => p.ErrorLog)
                     .HasForeignKey(d => d.IdVisitor)
-                    .HasConstraintName("FK_idVisitor");
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_errorLog_idVisitor");
             });
 
             modelBuilder.Entity<Log>(entity =>
@@ -119,14 +118,14 @@ namespace RaprockPlaylist.Context
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.Message)
-                    .HasColumnName("message")
                     .HasColumnType("varchar(255)")
-                    .HasCharSet(Pomelo.EntityFrameworkCore.MySql.Storage.CharSet.Utf8);
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
 
                 entity.Property(e => e.Source)
-                    .HasColumnName("source")
                     .HasColumnType("varchar(50)")
-                    .HasCharSet(Pomelo.EntityFrameworkCore.MySql.Storage.CharSet.Utf8);
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
 
                 entity.Property(e => e.TsLog)
                     .HasColumnName("tsLog")
@@ -158,7 +157,8 @@ namespace RaprockPlaylist.Context
                     .IsRequired()
                     .HasColumnName("email")
                     .HasColumnType("varchar(255)")
-                    .HasCharSet(Pomelo.EntityFrameworkCore.MySql.Storage.CharSet.Utf8);
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
 
                 entity.Property(e => e.IdVisitor)
                     .HasColumnName("idVisitor")
@@ -167,7 +167,8 @@ namespace RaprockPlaylist.Context
                 entity.Property(e => e.SongRequest1)
                     .HasColumnName("songRequest")
                     .HasColumnType("mediumtext")
-                    .HasCharSet(Pomelo.EntityFrameworkCore.MySql.Storage.CharSet.Utf8);
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
 
                 entity.HasOne(d => d.IdVisitorNavigation)
                     .WithMany(p => p.SongRequest)
@@ -190,7 +191,8 @@ namespace RaprockPlaylist.Context
                 entity.Property(e => e.IpAdress)
                     .HasColumnName("ipAdress")
                     .HasColumnType("varchar(20)")
-                    .HasCharSet(Pomelo.EntityFrameworkCore.MySql.Storage.CharSet.Utf8);
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
             });
 
             OnModelCreatingPartial(modelBuilder);

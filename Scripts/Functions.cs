@@ -1,4 +1,9 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Rewrite;
+using RaprockPlaylist.Context;
+using RaprockPlaylist.Models;
+using System;
+using System.Linq;
 using System.Net.Mail;
 using System.Text;
 
@@ -8,11 +13,13 @@ namespace RaprockPlaylist.Functions
     {
         public static bool IsValidEmail(string email)
         {
-            try {
+            try
+            {
                 var addr = new System.Net.Mail.MailAddress(email);
                 return addr.Address == email;
             }
-            catch {
+            catch
+            {
                 return false;
             }
         }
@@ -21,12 +28,70 @@ namespace RaprockPlaylist.Functions
     {
         public static void SendMail(string subject, string body, string from)
         {
-            MailMessage mailMessage = new MailMessage(from,"root@raprockplaylist.tk");
+            MailMessage mailMessage = new MailMessage(from, "info@raprockplaylist.tk");
             mailMessage.Subject = subject;
             mailMessage.Body = body;
+            mailMessage.IsBodyHtml = true;
             SmtpClient smtpClient = new SmtpClient("mail.raprockplaylist.tk");
             smtpClient.UseDefaultCredentials = true;
             smtpClient.Send(mailMessage);
+        }
+    }
+    class Log
+    {
+        public static void LogActivity(PlaylistContext context, string source, string message, Visitor visitor)
+        {
+            Models.Log log = new Models.Log();
+            log.IdVisitorNavigation = visitor;
+            log.Message = message;
+            log.Source = source;
+            context.Log.Add(log);
+            context.SaveChanges();
+        }
+        public static void LogActivity(PlaylistContext context, string source, string message, IHttpContextAccessor accessor)
+        {
+            Visitor visitor = InitializeVisitor(context, accessor);
+            LogActivity(context, source, message, visitor);
+        }
+        public static void LogError(PlaylistContext context, string source, string message, Visitor visitor)
+        {
+            try
+            {
+                Models.ErrorLog errorLog = new Models.ErrorLog();
+                errorLog.IdVisitorNavigation = visitor;
+                errorLog.Message = message;
+                errorLog.Source = source;
+                context.ErrorLog.Add(errorLog);
+                context.SaveChanges();
+                //Mail.SendMail("Error","Source:<br>"+source+"<br>Message:<br>"+message,"errorLogger@raprockplaylist.tk");
+            }
+            catch(Exception e)
+            {
+                Mail.SendMail("Critical Error",e.ToString(),"errorLogger@raprockplaylist.tk");
+            }
+        }
+        public static void LogError(PlaylistContext context, string source, string message, IHttpContextAccessor accessor)
+        {
+            Visitor visitor = InitializeVisitor(context, accessor);
+            LogError(context, source, message, visitor);
+        }
+        public static Visitor InitializeVisitor(PlaylistContext context, IHttpContextAccessor accessor)
+        {
+            Visitor visitor = context.Visitor.Where(v => v.IpAdress == accessor.HttpContext.Connection.RemoteIpAddress.ToString()).FirstOrDefault() ?? new Visitor();
+            if (String.IsNullOrEmpty(visitor.IpAdress))
+            {
+                visitor.IpAdress = GetIpAdress(accessor);
+                context.Visitor.Add(visitor);
+            }
+            else
+            {
+                context.Attach(visitor);
+            }
+            return visitor;
+        }
+        public static String GetIpAdress(IHttpContextAccessor accessor)
+        {
+            return accessor.HttpContext.Connection.RemoteIpAddress.ToString();
         }
     }
     class NonWwwRule : IRule
