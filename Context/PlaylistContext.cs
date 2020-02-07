@@ -12,12 +12,18 @@ namespace RaprockPlaylist.Context
         public PlaylistContext(DbContextOptions<PlaylistContext> options)
             : base(options)
         {
+            
         }
 
         public virtual DbSet<Band> Band { get; set; }
+        public virtual DbSet<BandHasUser> BandHasUser { get; set; }
         public virtual DbSet<ErrorLog> ErrorLog { get; set; }
         public virtual DbSet<Log> Log { get; set; }
+        public virtual DbSet<Song> Song { get; set; }
         public virtual DbSet<SongRequest> SongRequest { get; set; }
+        public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<UserCredentials> UserCredentials { get; set; }
+        public virtual DbSet<UserHasVisitor> UserHasVisitor { get; set; }
         public virtual DbSet<Visitor> Visitor { get; set; }
         private IConfiguration Configuration { get; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -51,6 +57,40 @@ namespace RaprockPlaylist.Context
                     .HasMaxLength(1)
                     .IsFixedLength()
                     .HasDefaultValueSql("'0x30'");
+            });
+
+            modelBuilder.Entity<BandHasUser>(entity =>
+            {
+                entity.HasKey(e => new { e.BandIdBand, e.UserIdUser })
+                    .HasName("PRIMARY");
+
+                entity.ToTable("band_has_user");
+
+                entity.HasIndex(e => e.BandIdBand)
+                    .HasName("fk_band_has_user_band1_idx");
+
+                entity.HasIndex(e => e.UserIdUser)
+                    .HasName("fk_band_has_user_user1_idx");
+
+                entity.Property(e => e.BandIdBand)
+                    .HasColumnName("band_idBand")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.UserIdUser)
+                    .HasColumnName("user_idUser")
+                    .HasColumnType("int(11)");
+
+                entity.HasOne(d => d.BandIdBandNavigation)
+                    .WithMany(p => p.BandHasUser)
+                    .HasForeignKey(d => d.BandIdBand)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_band_has_user_band1");
+
+                entity.HasOne(d => d.UserIdUserNavigation)
+                    .WithMany(p => p.BandHasUser)
+                    .HasForeignKey(d => d.UserIdUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_band_has_user_user1");
             });
 
             modelBuilder.Entity<ErrorLog>(entity =>
@@ -139,6 +179,55 @@ namespace RaprockPlaylist.Context
                     .HasConstraintName("FK_log_idVisitor");
             });
 
+            modelBuilder.Entity<Song>(entity =>
+            {
+                entity.HasKey(e => e.IdSong)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("song");
+
+                entity.HasIndex(e => e.IdBand)
+                    .HasName("FK_song_idBand_idx");
+
+                entity.HasIndex(e => e.IdSongRequest)
+                    .HasName("FK_song_idSongRequest_idx");
+
+                entity.HasIndex(e => e.SongUrl)
+                    .HasName("songUrl_UNIQUE")
+                    .IsUnique();
+
+                entity.Property(e => e.IdSong)
+                    .HasColumnName("idSong")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.IdBand)
+                    .HasColumnName("idBand")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.IdSongRequest)
+                    .HasColumnName("idSongRequest")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.SongUrl)
+                    .IsRequired()
+                    .HasColumnName("songUrl")
+                    .HasColumnType("varchar(255)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
+
+                entity.HasOne(d => d.IdBandNavigation)
+                    .WithMany(p => p.Song)
+                    .HasForeignKey(d => d.IdBand)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_song_idBand");
+
+                entity.HasOne(d => d.IdSongRequestNavigation)
+                    .WithMany(p => p.Song)
+                    .HasForeignKey(d => d.IdSongRequest)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_song_idSongRequest");
+            });
+
             modelBuilder.Entity<SongRequest>(entity =>
             {
                 entity.HasKey(e => e.IdSongRequest)
@@ -146,22 +235,15 @@ namespace RaprockPlaylist.Context
 
                 entity.ToTable("songRequest");
 
-                entity.HasIndex(e => e.IdVisitor)
-                    .HasName("FK_songRequest_idVisitor_idx");
+                entity.HasIndex(e => e.IdUser)
+                    .HasName("FK_songRequest_idUser_idx");
 
                 entity.Property(e => e.IdSongRequest)
                     .HasColumnName("idSongRequest")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.Email)
-                    .IsRequired()
-                    .HasColumnName("email")
-                    .HasColumnType("varchar(255)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.IdVisitor)
-                    .HasColumnName("idVisitor")
+                entity.Property(e => e.IdUser)
+                    .HasColumnName("idUser")
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.SongRequest1)
@@ -170,11 +252,117 @@ namespace RaprockPlaylist.Context
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.HasOne(d => d.IdVisitorNavigation)
+                entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.SongRequest)
-                    .HasForeignKey(d => d.IdVisitor)
+                    .HasForeignKey(d => d.IdUser)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_songRequest_idVisitor");
+                    .HasConstraintName("FK_songRequest_idUser");
+            });
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasKey(e => e.IdUser)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("user");
+
+                entity.HasIndex(e => e.Email)
+                    .HasName("email_UNIQUE")
+                    .IsUnique();
+
+                entity.Property(e => e.IdUser)
+                    .HasColumnName("idUser")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.ConsentGdpr).HasColumnName("consentGDPR");
+
+                entity.Property(e => e.Email)
+                    .IsRequired()
+                    .HasColumnName("email")
+                    .HasColumnType("varchar(255)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
+
+                entity.Property(e => e.TsCreate)
+                    .HasColumnName("tsCreate")
+                    .HasColumnType("timestamp")
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            });
+
+            modelBuilder.Entity<UserCredentials>(entity =>
+            {
+                entity.HasKey(e => e.IdUserCredentials)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("userCredentials");
+
+                entity.HasIndex(e => e.IdUser)
+                    .HasName("FK_userCredentials_idUser_idx");
+
+                entity.Property(e => e.IdUserCredentials)
+                    .HasColumnName("idUserCredentials")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.IdUser)
+                    .HasColumnName("idUser")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Password)
+                    .HasColumnName("password")
+                    .HasColumnType("varchar(50)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
+
+                entity.Property(e => e.TsCreate)
+                    .HasColumnName("tsCreate")
+                    .HasColumnType("timestamp")
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(e => e.Username)
+                    .HasColumnName("username")
+                    .HasColumnType("varchar(50)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany(p => p.UserCredentials)
+                    .HasForeignKey(d => d.IdUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_userCredentials_idUser");
+            });
+
+            modelBuilder.Entity<UserHasVisitor>(entity =>
+            {
+                entity.HasKey(e => new { e.UserIdUser, e.VisitorIdVisitor })
+                    .HasName("PRIMARY");
+
+                entity.ToTable("user_has_visitor");
+
+                entity.HasIndex(e => e.UserIdUser)
+                    .HasName("fk_user_has_visitor_user1_idx");
+
+                entity.HasIndex(e => e.VisitorIdVisitor)
+                    .HasName("fk_user_has_visitor_visitor1_idx");
+
+                entity.Property(e => e.UserIdUser)
+                    .HasColumnName("user_idUser")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.VisitorIdVisitor)
+                    .HasColumnName("visitor_idVisitor")
+                    .HasColumnType("int(11)");
+
+                entity.HasOne(d => d.UserIdUserNavigation)
+                    .WithMany(p => p.UserHasVisitor)
+                    .HasForeignKey(d => d.UserIdUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_user_has_visitor_user1");
+
+                entity.HasOne(d => d.VisitorIdVisitorNavigation)
+                    .WithMany(p => p.UserHasVisitor)
+                    .HasForeignKey(d => d.VisitorIdVisitor)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_user_has_visitor_visitor1");
             });
 
             modelBuilder.Entity<Visitor>(entity =>
@@ -193,6 +381,11 @@ namespace RaprockPlaylist.Context
                     .HasColumnType("varchar(20)")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
+
+                entity.Property(e => e.TsCreate)
+                    .HasColumnName("tsCreate")
+                    .HasColumnType("timestamp")
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -1,1 +1,1 @@
-dotnet ef dbcontext scaffold "Server=localhost;User Id=root;Password=NA17LA12ma20;Database=Playlist;TreatTinyAsBoolean=false" "Pomelo.EntityFrameworkCore.MySql" -c PlaylistContext -o Models --context-dir Context -f --no-build
+dotnet ef dbcontext scaffold "Server=localhost;User Id=root;Password=NA17LA12ma20;Database=Playlist;TreatTinyAsBoolean=false" "Pomelo.EntityFrameworkCore.MySql" -c PlaylistContextNew -o Models --context-dir Context -f --no-build

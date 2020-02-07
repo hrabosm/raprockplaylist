@@ -8,6 +8,7 @@ using RaprockPlaylist.Models;
 using RaprockPlaylist.Context;
 using RaprockPlaylist.Functions;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.AspNetCore.Http.Headers;
 
 namespace RaprockPlaylist.Controllers
 {

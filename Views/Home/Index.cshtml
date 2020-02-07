@@ -3,7 +3,7 @@
 }
 <div class="wrapper-main">
     <img class="raprock-logo" src="../Images/RapRockLogo.svg?version=1.0" alt="Rock / Rap-Rock / Nu-Metal Playlist">
-    
+    <link rel="stylesheet" href="~/css/loading.css" />
     @section Scripts
     {
     <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
@@ -51,9 +51,10 @@
         };
         $("#songRequestForm").submit(function(e) {
             e.preventDefault();
-
+            
             var formData = $("#songRequestForm").serialize();
-
+            $("#btn-main").hide();
+            $("#loading").show();
             $.ajax({
                 type: "POST",
                 url: "/Form/RequestForm",
@@ -66,15 +67,20 @@
                 $("#thankYou").show("fast");
             })
             .fail(function(data) {
+                $("#loading").hide();
+                $("#btn-main").show();
                 $("#inputWarning").prop('hidden',false);
                 $("#inputWarning").text(data.responseText);
             });
         });
+        setTimeout(function() {
+            $("#spotify").attr( 'src' ,'https://open.spotify.com/embed/playlist/0UiwdHVdGFCoD5BzOQuU9p' );
+        }, 2000);
     </script>
     }
 
 </div>
-<div class="container">
+<div class="container" id="main-container">
     <div class="form-input-request text-center" id="mainBody">
         
         <div data-aos="fade-up" class="row mb-3">
@@ -89,7 +95,7 @@
                     <p class="text-justify">So you like <a href="https://open.spotify.com/playlist/0UiwdHVdGFCoD5BzOQuU9p?si=SOeHst05T9yvMdZEk0D54Q">my playlist</a> and want me to add your song? Just fill up the short form down bellow and that's it! After that it's all in our hands!</p>
                 </div>
                 <div class="row">
-                    <iframe src="https://open.spotify.com/embed/playlist/0UiwdHVdGFCoD5BzOQuU9p" width="100%" height="160" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                    <iframe id="spotify" src="" width="100%" height="160" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
                 </div>
             </div>
             <div class="col-md-6">
@@ -374,8 +380,19 @@
             <br>
             <div data-aos="fade-up" >
                 <div class="captcha" id="g-captcha"></div> <br>
-                <p>Before submitting, please read our <a href="~/Home/Privacy">Privacy Policy</a></p>
+                <div class="consents"><input type="checkbox" name="GDPRConsent"><label for="GDPRConsent">I agree with <a href="~/Home/Privacy">Privacy Policy</a></label>
+                </div>
                 <input class="btn-main" id="btn-main" type="submit" value="Submit Request" disabled="disabled">
+                <div style="display: none;" class="wrapper-loading" id="loading">
+                    <div class="sk-chase">
+                        <div class="sk-chase-dot"></div>
+                        <div class="sk-chase-dot"></div>
+                        <div class="sk-chase-dot"></div>
+                        <div class="sk-chase-dot"></div>
+                        <div class="sk-chase-dot"></div>
+                        <div class="sk-chase-dot"></div>
+                    </div>
+                </div> 
                 <p hidden id="inputWarning">Please verify that you are not a robot!</p>
             </div>
         </form>

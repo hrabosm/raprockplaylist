@@ -31,7 +31,7 @@ namespace RaprockPlaylist.Controllers
             _accessor = accessor;
             _context = context;
         }
-        public IActionResult RequestForm(string songRequest, string email, string bandName, string bandLocation)
+        public IActionResult RequestForm(string songRequest, string email, string bandName, string bandLocation, bool GDPRConsent, string[] songs)
         {
             Visitor visitor = null;
             try
@@ -43,41 +43,68 @@ namespace RaprockPlaylist.Controllers
                     return BadRequest("Invalid email");
                 if (String.IsNullOrEmpty(songRequest) || String.IsNullOrEmpty(bandName) || String.IsNullOrEmpty(bandLocation))
                     return BadRequest("Please fill up all form fields");
+                if (!GDPRConsent)
+                    return BadRequest("Please agree with our Privacy Policy!");
 
                 songRequest = HttpUtility.HtmlEncode(songRequest);
                 bandName = HttpUtility.HtmlEncode(bandName);
                 _context.Database.EnsureCreated();
-                visitor = Functions.Log.InitializeVisitor(_context, _accessor);
+
+                visitor = EntityFW.InitializeVisitor(_context, _accessor);
                 //Log
                 Functions.Log.LogActivity(_context, "Index", "Sending form", visitor);
 
                 //Check if band exists if not, create one
-                Band band = _context.Band.Where(v => v.BandName == bandName).FirstOrDefault() ?? new Band();
-                if (String.IsNullOrEmpty(band.BandName))
+                Band band = _context.Band.Where(v => v.BandName == bandName).FirstOrDefault() ?? new Band
                 {
-                    band = new Band();
-                    band.BandName = bandName;
-                    band.BandLocation = bandLocation;
-                    _context.Band.Add(band);
+                    BandName = bandName,
+                    BandLocation = bandLocation
+                };
+                User user = _context.User.Where(v => v.Email == email).FirstOrDefault() ?? new User{
+                    Email = email,
+                    ConsentGdpr = GDPRConsent
+                };
+
+                UserHasVisitor UHV = _context.UserHasVisitor.Where(v => v.UserIdUserNavigation == user && v.VisitorIdVisitorNavigation == visitor).FirstOrDefault();
+                if(UHV == null)
+                {
+                    UHV = new UserHasVisitor{
+                        UserIdUserNavigation = user,
+                        VisitorIdVisitorNavigation = visitor
+                    };
+                    _context.UserHasVisitor.Add(UHV);
                 }
-                
+                BandHasUser BHU = _context.BandHasUser.Where(v => v.UserIdUserNavigation == user && v.BandIdBandNavigation == band).FirstOrDefault();
+                if(BHU == null)
+                {
+                    BHU = new BandHasUser{
+                        UserIdUserNavigation = user,
+                        BandIdBandNavigation = band
+                    };
+                    _context.BandHasUser.Add(BHU);
+                }
                 //Create new song request
                 SongRequest newSongRequest = new SongRequest
                 {
                     SongRequest1 = songRequest,
-                    IdVisitorNavigation = visitor,
-                    Email = email
+                    IdUserNavigation = user
                 };
+                foreach(string song in songs)
+                {
+                    _context.Song.Add(new Song {
+                        SongUrl = song,
+                        IdSongRequestNavigation = newSongRequest,
+                        IdBandNavigation = band
+                    });
+                }
 
-                _context.SongRequest.Add(newSongRequest);
-
-                Functions.Mail.SendMail("New song request", stringBuilder.Append("Band: ").Append(bandName).Append(" - From: ").Append(bandLocation).Append("<br>Message:<br>").Append(songRequest).ToString(), email);
+                Functions.Mail.SendMail("New song request", stringBuilder.Append("Band: ").Append(bandName).Append(" - From: ").Append(bandLocation).Append(" - Email: ").Append(email).Append("<br>Message:<br>").Append(songRequest).ToString());
                 _context.SaveChanges();
                 return Ok("Thank you!");
             }
             catch (Exception e)
             {
-                Functions.Log.LogError(_context, "Index-Send Form", e.ToString(), visitor ?? Functions.Log.InitializeVisitor(_context, _accessor));
+                Functions.Log.LogError(_context, "Index-Send Form", e.ToString(), visitor ?? EntityFW.InitializeVisitor(_context, _accessor));
                 return BadRequest();
             }
         }
@@ -88,9 +115,9 @@ namespace RaprockPlaylist.Controllers
             {
                 IRestResponse reCaptcha;
                 _context.Database.EnsureCreated();
-                visitor = Functions.Log.InitializeVisitor(_context,_accessor);
+                visitor = Functions.EntityFW.InitializeVisitor(_context,_accessor);
                 //log
-                Functions.Log.LogActivity(_context, "g-recaptchaSend", "Sending captcha for verification", visitor);
+                Functions.Log.LogActivity(_context, "g-recaptchaVerify", "Sending captcha for verification", visitor);
 
                 //reCaptcha verify
                 RequestFactory RC = new RequestFactory();
@@ -105,7 +132,7 @@ namespace RaprockPlaylist.Controllers
                 reCaptcha = RC.RequestSender(url, restRequest);
 
                 //log
-                Functions.Log.LogActivity(_context, "g-recaptchaSend", "Received captcha for verification", visitor);
+                Functions.Log.LogActivity(_context, "g-recaptchaVerify", "Received captcha for verification", visitor);
 
                 _context.SaveChanges();
 
@@ -114,14 +141,16 @@ namespace RaprockPlaylist.Controllers
                 //if(reCaptcha.Content.Contains('"'+"success"+'"'+": true"))
                 if (reCaptcha.Content.Contains("true"))
                 {
+                    Functions.Log.LogActivity(_context, "g-recaptchaVerify", "Captcha is valid", visitor);
                     HttpContext.Session.SetString("captcha", "verified");
                     return Ok();
                 }
             }
             catch (Exception e)
             {
-                Functions.Log.LogError(_context, "Index-Captcha verify", e.ToString(), visitor ?? Functions.Log.InitializeVisitor(_context, _accessor));
+                Functions.Log.LogError(_context, "Index-Captcha verify", e.ToString(), visitor ?? EntityFW.InitializeVisitor(_context, _accessor));
             }
+            Functions.Log.LogActivity(_context, "g-recaptchaVerify", "Captcha is invalid", visitor);
             return BadRequest();
         }
     }

@@ -120,8 +120,11 @@ html {
   background-size: cover;
   box-shadow: black 0px -50px 100px;
 }
+.consents input, .consents label {
+  display: inline!important;
+}
 input, label {
-  display:block;
+  display: block;
 }
 label {
   text-align: left;
