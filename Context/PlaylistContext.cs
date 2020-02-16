@@ -50,13 +50,6 @@ namespace RaprockPlaylist.Context
                     .HasColumnType("varchar(45)")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.InPlaylist)
-                    .IsRequired()
-                    .HasColumnName("inPlaylist")
-                    .HasMaxLength(1)
-                    .IsFixedLength()
-                    .HasDefaultValueSql("'0x30'");
             });
 
             modelBuilder.Entity<BandHasUser>(entity =>
@@ -248,7 +241,7 @@ namespace RaprockPlaylist.Context
 
                 entity.Property(e => e.SongRequest1)
                     .HasColumnName("songRequest")
-                    .HasColumnType("mediumtext")
+                    .HasColumnType("text")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 

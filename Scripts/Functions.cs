@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Rewrite;
 using RaprockPlaylist.Context;
 using RaprockPlaylist.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace RaprockPlaylist.Functions
 {
@@ -62,9 +64,18 @@ namespace RaprockPlaylist.Functions
             }
             return visitor;
         }
-        public static String GetIpAdress(IHttpContextAccessor accessor)
+        public static string GetIpAdress(IHttpContextAccessor accessor)
         {
             return accessor.HttpContext.Connection.RemoteIpAddress.ToString();
+        }
+        public static string[] GetSongs(string message)
+        {
+            List<string> songs = new List<string>();
+            foreach (Match item in Regex.Matches(message, @"(http|https):\/\/([\w\-_]+(?:(?:\.[\w\-_]+)+))([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?"))
+            {
+                songs.Add(item.ToString());
+            }
+            return songs.ToArray();
         }
     }
     class Log
@@ -97,6 +108,12 @@ namespace RaprockPlaylist.Functions
             }
             catch(Exception e)
             {
+                Models.ErrorLog errorLog = new Models.ErrorLog();
+                errorLog.IdVisitorNavigation = visitor;
+                errorLog.Message = e.ToString();
+                errorLog.Source = "ErrorLogger";
+                context.ErrorLog.Add(errorLog);
+                context.SaveChanges();
                 Mail.SendMail("Critical Error",e.ToString());
             }
         }

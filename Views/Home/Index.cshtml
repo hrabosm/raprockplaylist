@@ -380,7 +380,15 @@
             <br>
             <div data-aos="fade-up" >
                 <div class="captcha" id="g-captcha"></div> <br>
-                <div class="consents"><input type="checkbox" name="GDPRConsent"><label for="GDPRConsent">I agree with <a href="~/Home/Privacy">Privacy Policy</a></label>
+                <div class="consents">
+                    <input data-val="true" 
+                            data-val-required="The privacy policy field is required." 
+                            id="GDPRConsent" 
+                            name="GDPRConsent" 
+                            type="checkbox" 
+                            value="true" />
+                    <label for="GDPRConsent">I agree with <a href="~/Home/Privacy">Privacy Policy</a></label>
+                    <input name="GDPRConsent" type="hidden" value="false" />
                 </div>
                 <input class="btn-main" id="btn-main" type="submit" value="Submit Request" disabled="disabled">
                 <div style="display: none;" class="wrapper-loading" id="loading">

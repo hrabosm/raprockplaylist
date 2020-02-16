@@ -31,7 +31,7 @@ namespace RaprockPlaylist.Controllers
             _accessor = accessor;
             _context = context;
         }
-        public IActionResult RequestForm(string songRequest, string email, string bandName, string bandLocation, bool GDPRConsent, string[] songs)
+        public IActionResult RequestForm(string songRequest, string email, string bandName, string bandLocation, bool GDPRConsent)
         {
             Visitor visitor = null;
             try
@@ -44,7 +44,7 @@ namespace RaprockPlaylist.Controllers
                 if (String.IsNullOrEmpty(songRequest) || String.IsNullOrEmpty(bandName) || String.IsNullOrEmpty(bandLocation))
                     return BadRequest("Please fill up all form fields");
                 if (!GDPRConsent)
-                    return BadRequest("Please agree with our Privacy Policy!");
+                    return BadRequest("You have to agree with our Privacy Policy");
 
                 songRequest = HttpUtility.HtmlEncode(songRequest);
                 bandName = HttpUtility.HtmlEncode(bandName);
@@ -89,16 +89,36 @@ namespace RaprockPlaylist.Controllers
                     SongRequest1 = songRequest,
                     IdUserNavigation = user
                 };
+                _context.SongRequest.Add(newSongRequest);
+                string[] songs = EntityFW.GetSongs(songRequest);
                 foreach(string song in songs)
                 {
-                    _context.Song.Add(new Song {
-                        SongUrl = song,
-                        IdSongRequestNavigation = newSongRequest,
-                        IdBandNavigation = band
-                    });
+                    if(song.Contains("open.spotify.com") || song.Contains("youtube.com"))
+                    {
+                        _context.Song.Add(new Song {
+                            SongUrl = song,
+                            IdSongRequestNavigation = newSongRequest,
+                            IdBandNavigation = band
+                        });
+                    }
+                    else
+                    {
+                        Functions.Log.LogError(_context,"Index-Send - Form - Invalid song url",song,visitor);
+                    }
                 }
 
-                Functions.Mail.SendMail("New song request", stringBuilder.Append("Band: ").Append(bandName).Append(" - From: ").Append(bandLocation).Append(" - Email: ").Append(email).Append("<br>Message:<br>").Append(songRequest).ToString());
+                try
+                {
+                    Functions.Mail.SendMail("New song request", stringBuilder.Append("Band: ").Append(bandName).Append(" - From: ").Append(bandLocation).Append(" - Email: ").Append(email).Append("<br>Message:<br>").Append(songRequest).ToString());
+                }
+                catch(Exception e)
+                {
+                    Models.ErrorLog errorLog = new Models.ErrorLog();
+                    errorLog.IdVisitorNavigation = visitor;
+                    errorLog.Message = e.ToString();
+                    errorLog.Source = "Index-Send Form Email";
+                    _context.ErrorLog.Add(errorLog);
+                }
                 _context.SaveChanges();
                 return Ok("Thank you!");
             }

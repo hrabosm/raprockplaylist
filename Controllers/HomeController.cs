@@ -24,16 +24,9 @@ namespace RaprockPlaylist.Controllers
             _accessor = accessor;
             _context = context;
         }
-        [Route("error/{code:int}")]
-        public IActionResult Error(int code)
-        {
-            Functions.Log.LogError(_context,HttpContext.Request.Path, "User encountered error: "+code,_accessor);
-            _context.SaveChanges();
-            ViewData["errorCode"] = code;
-            return View();
-        }
         public IActionResult Index()
         {
+            _context.Database.EnsureCreated();
             Functions.Log.LogActivity(_context,"Index", "Loaded main page",_accessor);
             _context.SaveChanges();
             return View();
@@ -41,8 +34,27 @@ namespace RaprockPlaylist.Controllers
 
         public IActionResult Privacy()
         {
+            _context.Database.EnsureCreated();
             Functions.Log.LogActivity(_context,"Privacy", "Loading page",_accessor);
             _context.SaveChanges();
+            return View();
+        }
+        [Route("{*url}", Order = 999)]
+        public IActionResult CatchAll()
+        {
+            _context.Database.EnsureCreated();
+            Functions.Log.LogActivity(_context,"Not Found",HttpContext.Request.Path,_accessor);
+            Response.StatusCode = 404;
+            ViewData["errorCode"] = 404;
+            return View("Error");
+        }
+        [Route("error/{code:int}")]
+        public IActionResult Error(int code)
+        {
+            _context.Database.EnsureCreated();
+            Functions.Log.LogError(_context,HttpContext.Request.Path, "User encountered error: "+code,_accessor);
+            _context.SaveChanges();
+            ViewData["errorCode"] = code;
             return View();
         }
         /*
