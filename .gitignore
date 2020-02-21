@@ -5,4 +5,5 @@
 !.vscode/extensions.json
 *.code-workspace
 bin
+node_modules
 obj

@@ -115,8 +115,8 @@ namespace RaprockPlaylist.Controllers
                 {
                     Models.ErrorLog errorLog = new Models.ErrorLog();
                     errorLog.IdVisitorNavigation = visitor;
-                    errorLog.Message = e.ToString();
-                    errorLog.Source = "Index-Send Form Email";
+                    errorLog.Message = e.Message;
+                    errorLog.Source = "Index-Send Form Email - "+e.Source;
                     _context.ErrorLog.Add(errorLog);
                 }
                 _context.SaveChanges();
