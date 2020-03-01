@@ -2,9 +2,12 @@
     {
       "outputFileName": "wwwroot/css/vendor.min.css",
       "inputFiles": [
-        "node_modules/bootstrap/dist/css/bootstrap.min.css"
+        "node_modules/bootstrap/dist/css/bootstrap.min.css",
+        "Scripts/css/footer.css",
+        "Scripts/css/loading.css",
+        "Scripts/css/site.css"
       ],
-      "minify": { "enabled": false }
+      "minify": { "enabled": true }
     },
     {
       "outputFileName": "wwwroot/js/vendor.min.js",
@@ -14,5 +17,19 @@
         "node_modules/bootstrap/dist/js/bootstrap.min.js"
       ],
       "minify": { "enabled": false }
+    },
+    {
+      "outputFileName": "wwwroot/css/error.min.css",
+      "inputFiles": [
+        "Scripts/css/error.css"
+      ],
+      "minify": { "enabled": true }
+    },
+    {
+      "outputFileName": "wwwroot/css/privacy.min.css",
+      "inputFiles": [
+        "Scripts/css/privacy.css"
+      ],
+      "minify": { "enabled": true }
     }
   ]

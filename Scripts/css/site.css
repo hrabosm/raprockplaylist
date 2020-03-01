@@ -115,7 +115,7 @@ html {
   justify-content: center;
   height: 100vh;
   /* Margin bottom by footer height */
-  background-image: url("../Images/backgroundGray.jpg");
+  background-image: url("/Images/backgroundGray.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   box-shadow: black 0px -50px 100px;

@@ -10,9 +10,6 @@
     <!-- CSS -->
     <link rel="stylesheet" href="~/css/vendor.min.css" />
 
-    <link rel="stylesheet" href="~/css/site.css?version=1.0.2" />
-    <link rel="stylesheet" href="~/css/footer.css" />
-
     <link rel="apple-touch-icon" sizes="180x180" href="~/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="~/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="~/favicon-16x16.png">
@@ -23,7 +20,6 @@
 
     <!-- AOS -->
     <link href="~/lib/aos/dist/aos.css" rel="stylesheet">
-    <script src="~/lib/aos/dist/aos.js"></script>
 
     <!-- OPG -->
     <meta property="og:title" content="Raprock Playlist" />
@@ -33,22 +29,6 @@
     <meta property="og:site_name" content="RaprockPlaylist" />
     <meta property="og:description" content="Want your band or your favorite song featured in our playlist? Submit your request, we'll review it and add it to our playlist! We have thousands of followers, so get your style heard." />
 
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-MVZLDT2');</script>
-    <!-- End Google Tag Manager -->
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154892407-1"></script>
-    <script type="text/javascript">
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', 'UA-154892407-1');
-    </script>
     @RenderSection("ScriptsHeader", required: false)
 </head>
 <body>
@@ -92,9 +72,24 @@
             </div>
         </div>
     </footer>
+    <script src="~/lib/aos/dist/aos.js"></script>
     <script src="~/js/vendor.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/form.js"></script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MVZLDT2');</script>
+    <!-- End Google Tag Manager -->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154892407-1"></script>
+    <script type="text/javascript">
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-154892407-1');
+    </script>
     <script data-ad-client="ca-pub-3431672697373164" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
