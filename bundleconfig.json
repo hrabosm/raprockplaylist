@@ -2,12 +2,13 @@
     {
       "outputFileName": "wwwroot/css/vendor.min.css",
       "inputFiles": [
-        "node_modules/bootstrap/dist/css/bootstrap.min.css",
+        "node_modules/bootstrap/dist/css/bootstrap.css",
         "Scripts/css/footer.css",
         "Scripts/css/loading.css",
-        "Scripts/css/site.css"
+        "Scripts/css/site.css",
+        "node_modules/font-awesome/css/font-awesome.min.css"
       ],
-      "minify": { "enabled": true }
+      "minify": { "enabled": true,"adjustRelativePaths": false }
     },
     {
       "outputFileName": "wwwroot/js/vendor.min.js",
@@ -31,5 +32,20 @@
         "Scripts/css/privacy.css"
       ],
       "minify": { "enabled": true }
+    },
+    {
+      "outputFileName": "wwwroot/js/bootstrap.min.js.map",
+      "inputFiles": [
+        "node_modules/bootstrap/dist/js/bootstrap.min.js.map"
+      ],
+      "minify": { "enabled": false }
+    }
+    ,
+    {
+      "outputFileName": "wwwroot/js/popper.min.js.map",
+      "inputFiles": [
+        "node_modules/popper.js/dist/popper.min.js.map"
+      ],
+      "minify": { "enabled": false }
     }
   ]

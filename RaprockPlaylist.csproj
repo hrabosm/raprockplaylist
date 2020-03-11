@@ -6,7 +6,6 @@
   <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.435" />
     <PackageReference Include="Fizzler" Version="1.2.0" />
@@ -19,11 +18,15 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NETCore.App" Version="2.2.8" />
+    <PackageReference Include="Microsoft.NETCore.App" Version="3.0.0-preview-27122-01" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="NUglify" Version="1.5.13" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.1" />
     <PackageReference Include="RestSharp" Version="106.10.1" />
     <PackageReference Include="Svg.Core" Version="3.0.49.2" />
     <PackageReference Include="WebEssentials.AspNetCore.PWA" Version="1.0.59" />
+  </ItemGroup>
+  <ItemGroup>
+    <DotNetCliToolReference Include="BundlerMinifier.Core" Version="3.2.435" />
   </ItemGroup>
 </Project>
