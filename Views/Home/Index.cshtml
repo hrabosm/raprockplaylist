@@ -8,7 +8,6 @@
     <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
         async defer>
     </script>
-    
     <script type="text/javascript">
         
         AOS.init();
@@ -77,7 +76,9 @@
         }, 2000);
     </script>
     }
-
+    <script type="application/ld+json">
+            @Html.Raw(ViewBag.JsonLd)
+    </script>
 </div>
 <div class="container" id="main-container">
     <div class="form-input-request text-center" id="mainBody">

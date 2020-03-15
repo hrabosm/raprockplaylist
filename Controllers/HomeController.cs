@@ -26,6 +26,16 @@ namespace RaprockPlaylist.Controllers
         }
         public IActionResult Index()
         {
+            var orgStructuredSchema = new Schema.NET.Organization()
+            {
+                Name = "Vole Software",
+                Url = new Uri("https://raprockplaylist.tk"),
+                SameAs = new Uri[3]{new Uri("https://www.instagram.com/raprockplaylist"),
+                                    new Uri("https://twitter.com/RaprockP"),
+                                    new Uri("https://linkedin.com/in/martin-hrabovský-210306177")}
+
+            };
+            ViewBag.JsonLd = orgStructuredSchema.ToString();
             _context.Database.EnsureCreated();
             Functions.Log.LogActivity(_context,"Index", "Loaded main page",_accessor);
             _context.SaveChanges();

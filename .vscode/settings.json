@@ -1,0 +1,30 @@
+{
+    "deploy.reloaded": {
+        "packages": [
+            {
+                "name": "RaprockWebsite",
+                "description": "Raprock publish website",
+                "files": [
+                    "bin/release/netcoreapp3.1/publish/**"
+                ]
+            }
+        ],
+
+        "targets": [
+            {
+                "type": "sftp",
+                "name": "RaprockPlaylist",
+                "description": "RaprockPlaylist",
+
+                "host": "209.250.245.164", "port": 22,
+                "user": "root", "password": "E+y1]@[Qdw3TP@))",
+
+                "dir": "/var/RaprockPlaylist",
+                "mappings": {
+                    "bin/release/netcoreapp3.1/publish/**/*": "/"
+                },
+                "checkBeforeDeploy": true
+            }
+        ]
+    }
+}
